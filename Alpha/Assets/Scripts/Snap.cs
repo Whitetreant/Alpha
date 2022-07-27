@@ -23,6 +23,7 @@ public class Snap : MonoBehaviour, IDropHandler
         }
         else{
             thisCard.parentToReturnTo = this.transform;
+            thisCard.isPlay = false;
         }
          
     }
