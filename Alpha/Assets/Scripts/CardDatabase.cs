@@ -6,10 +6,11 @@ using UnityEngine;
 public class CardDatabase : MonoBehaviour
 {
 
+    public Card thisCard;
     public static List<Card> cardList = new List<Card>();
     
     private Card addCard(int CardID, string Name, int Cost, string Role, string Category, string Description, string Rarity){
-        Card thisCard = ScriptableObject.CreateInstance<Card>();
+        thisCard = ScriptableObject.CreateInstance<Card>();
         thisCard.cardID = CardID;
         thisCard.name = Name;
         thisCard.cost = Cost;

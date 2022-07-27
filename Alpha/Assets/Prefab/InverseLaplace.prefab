@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7724060431669310031}
   - component: {fileID: 7724060431669310028}
   - component: {fileID: 7724060431669310029}
+  - component: {fileID: 7724060431669310030}
   - component: {fileID: 2042618457209279315}
   m_Layer: 5
   m_Name: InverseLaplace
@@ -78,6 +79,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7724060431669310030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7724060431669310024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28ee6269de02934439d0d2e061ec0581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2042618457209279315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,10 +103,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac87dd707cf54394f84770773e62b11e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
-  maxHP: 0
-  currentHP: 0
-  showHP: {fileID: 0}
 --- !u!1 &8254104893011203534
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class Enemy : MonoBehaviour, IDropHandler, IPointerDownHandler
 {
-    public static event Action<Enemy> isTarget;
-    public string enemyName;
     public int maxHP;
     public int currentHP;
     public Text showHP;
@@ -20,12 +17,14 @@ public class Enemy : MonoBehaviour, IDropHandler, IPointerDownHandler
     }
     public void takeDamage(int amount){
         currentHP -= amount;
+    }
+
+    void Update(){
         showHP.text = currentHP.ToString() + "/" + maxHP.ToString();
     }
 
     public void OnPointerDown(PointerEventData eventData){
-        print("Click: " + eventData.pointerPressRaycast.gameObject.transform.name);
-        isTarget?.Invoke(this);
+        print(eventData.pointerPress);
     }
 
     public void OnDrop(PointerEventData eventData){
