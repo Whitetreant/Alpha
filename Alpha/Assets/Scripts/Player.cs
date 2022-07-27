@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 
 public class Player : MonoBehaviour
 {
     //Contain Player action
     //onclick send data to play card
+    public static event Action onDeckChange;
     public GameObject cardPrefab;
     public int maxMana;
     public int currentMana;
@@ -15,14 +17,14 @@ public class Player : MonoBehaviour
     public int currentHp;
 
     public void drawCard(){
-        if (GameManager.cardList.Count > 0){
+        if (DeckManager.cardList.Count > 0){
             GameObject thisCard = Instantiate(cardPrefab, this.transform);
             ThisCard spawn = thisCard.GetComponent<ThisCard>();
-            int randCard = GameManager.cardList[Random.Range(0, GameManager.cardList.Count)];
+            int randCard = DeckManager.cardList[UnityEngine.Random.Range(0, DeckManager.cardList.Count)];
             spawn.isDraw(randCard);
-            GameManager.cardList.Remove(randCard);
+            DeckManager.cardList.Remove(randCard);
             // onHand += 1;
-            return;
+            onDeckChange?.Invoke();
         }
     }
 }

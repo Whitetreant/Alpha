@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class Enemy : MonoBehaviour, IDropHandler, IPointerDownHandler
 {
+    public static event Action<Enemy> isTarget;
+    public string enemyName;
     public int maxHP;
     public int currentHP;
     public Text showHP;
@@ -24,7 +27,8 @@ public class Enemy : MonoBehaviour, IDropHandler, IPointerDownHandler
     }
 
     public void OnPointerDown(PointerEventData eventData){
-        print(eventData.pointerPress);
+        print("Click: " + eventData.pointerPressRaycast.gameObject.transform.name);
+        isTarget?.Invoke(this);
     }
 
     public void OnDrop(PointerEventData eventData){

@@ -34,7 +34,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     private void Constructor(){
         rectTransform = GetComponent<RectTransform>();
         effect = System.Activator.CreateInstance(System.Type.GetType(this.name)) as EffectExecute;
-        playZone = GameObject.FindGameObjectWithTag("playZone").GetComponent<Image>();
+        playZone = GameObject.FindGameObjectWithTag("playArea").GetComponent<Image>();
     }
 
     public void isDraw(int cardID){
