@@ -11,10 +11,6 @@ public class Player : MonoBehaviour
     //onclick send data to play card
     public static event Action onDeckChange;
     public GameObject cardPrefab;
-    public int maxMana;
-    public int currentMana;
-    public int maxHp;
-    public int currentHp;
 
     public void drawCard(){
         if (DeckManager.cardList.Count > 0){

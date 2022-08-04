@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CardDatabase : MonoBehaviour
 {
-
     public static List<Card> cardList = new List<Card>();
+    public Card newCard;
     
     private Card addCard(int CardID, string Name, int Cost, string Role, string Category, string Description, string Rarity){
         Card thisCard = ScriptableObject.CreateInstance<Card>();

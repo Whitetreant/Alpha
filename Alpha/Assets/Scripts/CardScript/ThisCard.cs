@@ -8,7 +8,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 {
     // public int cardID;
     // public new string name;
-    // public int cost;
+    public int cost = 0;
     // public string role;
     // public string category;
     // public string description;
@@ -25,16 +25,19 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
     private RectTransform rectTransform;
     public Image playZone;
+    public Transform holdCard;
     public Transform parentToReturnTo = null;
     public bool isPlay = false;
     public List<Enemy> target;
 
     private EffectExecute effect;
+    public Character characterPlayedCard;
 
     private void Constructor(){
         rectTransform = GetComponent<RectTransform>();
         effect = System.Activator.CreateInstance(System.Type.GetType(this.name)) as EffectExecute;
         playZone = GameObject.FindGameObjectWithTag("playArea").GetComponent<Image>();
+        holdCard = GameObject.FindGameObjectWithTag("HoldCard").GetComponent<Transform>();
     }
 
     public void isDraw(int cardID){
@@ -42,6 +45,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         this.name = thisCard.name;
         nameText.text = thisCard.name;
         costText.text = thisCard.cost.ToString();
+        cost = thisCard.cost;
         categoryText.text = thisCard.category;
         descriptionText.text = thisCard.description;
         roleImage.sprite = Resources.Load<Sprite>(thisCard.role);
@@ -59,15 +63,14 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     }
 
     public void applyEffect(){
-        Debug.Log("apply effect" + this.name);
+        Debug.Log("Apply effect" + this.name);
         
         if (effect != null){
             if (effect.executeEffect(target)){
                 Destroy(this.gameObject);
+                characterPlayedCard.PlayCard(cost);
             }
-            
         }
-        
     }
 
     private void subscribe(){
@@ -81,6 +84,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
 
     private void setTarget(Enemy targetSelect){
         target.Add(targetSelect);
+        Debug.Log("Target: " + targetSelect.name);
         applyEffect();
 
     }
@@ -95,26 +99,40 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public void OnDrag(PointerEventData eventData){
         rectTransform.anchoredPosition += eventData.delta;
     }
-    
     public void OnEndDrag(PointerEventData eventData){
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         playZone.raycastTarget = false;
-        
-        if (isPlay == false){
+        GameObject[] allCharacter = GameObject.FindGameObjectsWithTag("Player");
+        bool canPlay;
+        foreach (GameObject character in allCharacter){
+            if (character.GetComponent<Character>().activePlayer==true){
+                characterPlayedCard = character.GetComponent<Character>();
+                break;
+            }
+        }
+        if (cost > characterPlayedCard.currentMP){
+            canPlay = false;
+            Debug.LogWarning("Not Enough Mana");
+        }
+        else{
+            canPlay = true;
+        }
+        if (isPlay == true && canPlay){
+            Debug.Log("Can Play");
+            this.transform.SetParent(holdCard.transform);
+            subscribe();
+        }
+
+        else if (isPlay == false || canPlay){
             this.transform.SetParent(parentToReturnTo);
             unSubscribe();
             target.Clear();
             Debug.Log("Cancel Play");
         }
-        if (isPlay == true){
-            Debug.Log("IsPlay");
-            this.transform.SetParent(parentToReturnTo);
-            subscribe();
-        }
     }
 
     public void OnPointerDown(PointerEventData eventData){
-        print("Click: " + eventData.pointerPressRaycast.gameObject.transform.parent.name);
+        print("Select: " + eventData.pointerPressRaycast.gameObject.transform.parent.name);
     }
     
     private void OnDisable(){
