@@ -6,22 +6,23 @@ public class EffectExecute
 {
     public bool isPlaySuccessful = false;
 
-    public virtual bool executeEffect(List<Enemy> target){
+    public virtual bool ExecuteEffect(List<Enemy> EnemyTarget = null, List<Character> CharacterTarget = null){
         // Debug.Log("Execute some effect");
-        applyStatus(target);
-        dealDamage(target);
+        ApplyStatus(EnemyTarget);
+        DealDamage(EnemyTarget);
+        GetShield(CharacterTarget);
         return true;
     }
 
-    public virtual void applyStatus(List<Enemy> target){
-        for(int i = 0; i < target.Count; i++){
-            
-        }
+    public virtual void ApplyStatus(List<Enemy> target=null){
         
     }
     
-    public virtual void dealDamage(List<Enemy> target){
+    public virtual void DealDamage(List<Enemy> target=null){
         
-        
+    }
+
+    public virtual void GetShield(List<Character> target=null){
+
     }
 }

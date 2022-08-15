@@ -2,13 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Endure : EffectExecute
+public class Endure : ThisCard
 {
-    public override void dealDamage(List<Enemy> target)
-   {
-      for(int i = 0; i < target.Count; i++){
-            // target[i].takeDamage(3);
-            Debug.Log("Endure Deal 3 damage to" + target[i].name);
+    public override bool ExecuteEffect(List<Enemy> Enemytarget, List<Character> CharacterTarget){
+        if (CharacterTarget.Count == 1){
+            base.ExecuteEffect(null, CharacterTarget);
+            return true;
         }
+        else{
+            Debug.LogWarning("Apply Effect Failed not enough target");
+            return false;
+        }
+    }
+    public override void GetShield(List<Character> target)
+   {
+        for(int i = 0; i < target.Count; i++){
+            target[i].GetShield(3);
+            Debug.Log(target[i].name + " Get 3 shield");
+        }
+        
    }
 }

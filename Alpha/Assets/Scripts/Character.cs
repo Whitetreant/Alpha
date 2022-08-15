@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IPointerDownHandler
 {
    public CharacterScriptable thisCharacter;
+   public static event Action<Character> isTarget;
    public bool activePlayer;
    public int currentMaxHP;
 	public int currentHP;
@@ -35,9 +38,21 @@ public class Character : MonoBehaviour
    }
 
    public void TakeDamage(int amount){
-      currentHP -= amount;
+      if (amount > currentShield){
+         amount -= currentShield;
+         currentHP -= amount;
+      }
+      else if (amount <= currentShield){
+         currentShield -= amount;
+      }
       RefreshStatus();
       Debug.LogWarning("Player take damage");
+   }
+
+   public void GetShield(int amount){
+      currentShield += amount;
+      RefreshStatus();
+      Debug.Log("Get Shield");
    }
 
    public void PlayCard(int amount){
@@ -50,4 +65,10 @@ public class Character : MonoBehaviour
       showCurrentShield.text = currentShield.ToString();
       showCurrentMP.text = currentMP.ToString();
    }
+
+   public void OnPointerDown(PointerEventData eventData){
+        // Debug.Log("Click: " + eventData.pointerPressRaycast.gameObject.transform.name);
+        isTarget?.Invoke(this);
+    }
+
 }

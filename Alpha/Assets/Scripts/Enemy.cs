@@ -26,6 +26,7 @@ public class Enemy : MonoBehaviour, IPointerDownHandler
     public void EnemyAction(){
         if (GameManager.state == BattleState.ENEMYTURN && isEnemyTurn == true){
             DealDamage(3);
+            isEnemyTurn = false;
         }
     }
     

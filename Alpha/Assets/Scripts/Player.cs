@@ -11,14 +11,16 @@ public class Player : MonoBehaviour
     //onclick send data to play card
     public static event Action onDeckChange;
     public GameObject cardPrefab;
+    public DeckManager MyDeck;
 
-    public void drawCard(){
-        if (DeckManager.cardList.Count > 0){
+    public void DrawCard(){
+        if (MyDeck.cardList.Count > 0 && GameManager.state == BattleState.PLAYERTURN){
             GameObject thisCard = Instantiate(cardPrefab, this.transform);
-            ThisCard spawn = thisCard.GetComponent<ThisCard>();
-            int randCard = DeckManager.cardList[UnityEngine.Random.Range(0, DeckManager.cardList.Count)];
-            spawn.isDraw(randCard);
-            DeckManager.cardList.Remove(randCard);
+            string randCard = MyDeck.cardList[UnityEngine.Random.Range(0, MyDeck.cardList.Count)];
+            
+            ScriptHandler Handler = thisCard.GetComponent<ScriptHandler>();
+            Handler.ScriptConstructor(randCard);
+            MyDeck.cardList.Remove(randCard);
             // onHand += 1;
             onDeckChange?.Invoke();
         }

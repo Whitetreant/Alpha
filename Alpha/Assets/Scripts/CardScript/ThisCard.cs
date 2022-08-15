@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     // public int cardID;
-    // public new string name;
+    public string cardName;
     public int cost = 0;
     // public string role;
     // public string category;
@@ -28,20 +28,54 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public Transform holdCard;
     public Transform parentToReturnTo = null;
     public bool isPlay = false;
-    public List<Enemy> target;
-
+    public List<Enemy> EnemyTarget = new List<Enemy>();
+    public List<Character> CharacterTarget = new List<Character>();
     private EffectExecute effect;
     public Character characterPlayedCard;
 
-    private void Constructor(){
+    public bool isPlaySuccessful = false;
+
+    public void OnEnable(){
+        ScriptHandler.OnDraw += Constructor;
+    }
+    private void Constructor(string name){
+        cardName = name;
         rectTransform = GetComponent<RectTransform>();
-        effect = System.Activator.CreateInstance(System.Type.GetType(this.name)) as EffectExecute;
+        Debug.Log(this.name + " ConstructorStart");
         playZone = GameObject.FindGameObjectWithTag("playArea").GetComponent<Image>();
         holdCard = GameObject.FindGameObjectWithTag("HoldCard").GetComponent<Transform>();
+        Text[] allText = gameObject.GetComponentsInChildren<Text>();
+        Image[] allImage = gameObject.GetComponentsInChildren<Image>();
+        for (int i = 0; i < allText.Length; i++){
+            if (allText[i].name == "Cost"){
+                costText = allText[i];
+            }
+            else if (allText[i].name == "Category"){
+                categoryText = allText[i];
+            }
+            else if (allText[i].name == "Name"){
+                nameText = allText[i];
+            }
+            else{
+                descriptionText = allText[i];
+            }
+        }
+
+        for (int i = 0; i < allImage.Length; i++){
+            if (allImage[i].name == "Template"){
+                roleImage = allImage[i];
+            }
+            else if(allImage[i].name == "Rarity"){
+                rarityColor = allImage[i];
+            }
+        }
+
+        IsDraw();
+        
     }
 
-    public void isDraw(int cardID){
-        Card thisCard = CardDatabase.cardList[cardID];
+    public void IsDraw(){
+        Card thisCard = Resources.Load<Card>("CardContainer/" + cardName);
         this.name = thisCard.name;
         nameText.text = thisCard.name;
         costText.text = thisCard.cost.ToString();
@@ -57,36 +91,68 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
         else{
             rarityColor.color = new Color32(102, 0, 153, 255);
-        }    
-        Constructor();
-
-    }
-
-    public void applyEffect(){
-        Debug.Log("Apply effect" + this.name);
-        
-        if (effect != null){
-            if (effect.executeEffect(target)){
-                Destroy(this.gameObject);
-                characterPlayedCard.PlayCard(cost);
-            }
         }
+        Debug.Log("Card is Draw");
+        
+        ScriptHandler.OnDraw -= Constructor;
     }
 
-    private void subscribe(){
-        Enemy.isTarget += setTarget;
+    public void ApplyEffect(){
+        Debug.Log("Apply effect" + this.name);
+        if (ExecuteEffect(EnemyTarget, CharacterTarget)){
+            Destroy(this.gameObject);
+            characterPlayedCard.PlayCard(cost);
+        }
+        // if (effect != null){
+        //     if (effect.ExecuteEffect(EnemyTarget, CharacterTarget)){
+        //         Destroy(this.gameObject);
+        //         characterPlayedCard.PlayCard(cost);
+        //     }
+        // }
     }
 
-    private void unSubscribe(){
-        Enemy.isTarget -= setTarget;
+    public virtual bool ExecuteEffect(List<Enemy> EnemyTarget = null, List<Character> CharacterTarget = null){
+        // Debug.Log("Execute some effect");
+        ApplyStatus(EnemyTarget);
+        DealDamage(EnemyTarget);
+        GetShield(CharacterTarget);
+        return true;
+    }
+
+    public virtual void ApplyStatus(List<Enemy> target=null){
+        
+    }
+    
+    public virtual void DealDamage(List<Enemy> target=null){
+        
+    }
+
+    public virtual void GetShield(List<Character> target=null){
+
+    }
+    private void Subscribe(){
+        Enemy.isTarget += SetEnemyTarget;
+        Character.isTarget += SetCharacterTarget;
+    }
+
+    private void Unsubscribe(){
+        Enemy.isTarget -= SetEnemyTarget;
+        Character.isTarget -= SetCharacterTarget;
+
         Debug.Log("Unsubscribe");
     }
 
-    private void setTarget(Enemy targetSelect){
-        target.Add(targetSelect);
+    private void SetEnemyTarget(Enemy targetSelect){
+        EnemyTarget.Add(targetSelect);
         Debug.Log("Target: " + targetSelect.name);
-        applyEffect();
+        ApplyEffect();
 
+    }
+
+    private void SetCharacterTarget(Character targetSelect){
+        CharacterTarget.Add(targetSelect);
+        Debug.Log("Target: " + targetSelect.name);
+        ApplyEffect();
     }
 
     public void OnBeginDrag(PointerEventData eventData){
@@ -99,6 +165,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public void OnDrag(PointerEventData eventData){
         rectTransform.anchoredPosition += eventData.delta;
     }
+
     public void OnEndDrag(PointerEventData eventData){
         GetComponent<CanvasGroup>().blocksRaycasts = true;
         playZone.raycastTarget = false;
@@ -118,24 +185,26 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
             canPlay = true;
         }
         if (isPlay == true && canPlay){
-            Debug.Log("Can Play");
+            Debug.Log("Select " + this.name);
             this.transform.SetParent(holdCard.transform);
-            subscribe();
+            Subscribe();
         }
 
-        else if (isPlay == false || canPlay){
+        else if (isPlay == false || !canPlay){
             this.transform.SetParent(parentToReturnTo);
-            unSubscribe();
-            target.Clear();
+            Unsubscribe();
+            EnemyTarget.Clear();
+            CharacterTarget.Clear();
             Debug.Log("Cancel Play");
         }
     }
 
     public void OnPointerDown(PointerEventData eventData){
-        print("Select: " + eventData.pointerPressRaycast.gameObject.transform.parent.name);
+        print("Card: " + eventData.pointerPressRaycast.gameObject.transform.parent.name);
     }
     
     private void OnDisable(){
-        Enemy.isTarget -= setTarget;
+        Enemy.isTarget -= SetEnemyTarget;
+        Character.isTarget -= SetCharacterTarget;
     }
 }

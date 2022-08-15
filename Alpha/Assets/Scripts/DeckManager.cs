@@ -6,8 +6,9 @@ using UnityEngine.UI;
 
 public class DeckManager : MonoBehaviour
 {
-    public static List<int> cardList = new List<int>();
-
+    public List<string> cardList = new List<string>();
+    public List<string> listCardInDeck;
+    public string container;
     public Text currentCardInDeck;
 
     private void OnEnable(){
@@ -19,16 +20,30 @@ public class DeckManager : MonoBehaviour
         refreshCurrentCardInDeck();
     }
 
-    public void addCardtoPlayerStartDeck(){
-        cardList.Add(3);
-        cardList.Add(0);
-        cardList.Add(0);
-        cardList.Add(0);
-        cardList.Add(1);
-        cardList.Add(1);
-        cardList.Add(1);
-        cardList.Add(2);
+    void Update(){
+        listCardInDeck = cardList;
+    }
 
+    public void addCardtoPlayerStartDeck(){
+        cardList.Add("Fury");
+        cardList.Add("Smash");
+        cardList.Add("Smash");
+        cardList.Add("Smash");
+        cardList.Add("Endure");
+        cardList.Add("Endure");
+        cardList.Add("Endure");
+        cardList.Add("Slash");
+        
+
+    }
+
+    public void Shuffle(){
+        for(int i = 0; i < cardList.Count; i++){
+            container = cardList[i];
+            int randomIndex = Random.Range(i, cardList.Count);
+            cardList[i] = cardList[randomIndex];
+            cardList[randomIndex] = container;
+        }
     }
 
     public void refreshCurrentCardInDeck(){
