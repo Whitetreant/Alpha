@@ -16,8 +16,8 @@ public class DeckManager : MonoBehaviour
     }
     void Start()
     {
-        addCardtoPlayerStartDeck();
-        refreshCurrentCardInDeck();
+        // addCardtoPlayerStartDeck();
+        // refreshCurrentCardInDeck();
     }
 
     void Update(){
@@ -33,7 +33,8 @@ public class DeckManager : MonoBehaviour
         cardList.Add("Endure");
         cardList.Add("Endure");
         cardList.Add("Slash");
-        
+        Shuffle();
+        refreshCurrentCardInDeck();
 
     }
 

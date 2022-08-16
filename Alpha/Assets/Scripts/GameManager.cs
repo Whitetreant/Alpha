@@ -14,8 +14,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject[] playerPrefab;
     public GameObject[] enemyPrefab;
+    public List<GameObject> currentCharacter;
 
     public Player PlayerHand;
+    public DeckManager MyDeck;
     void Start(){
         state = BattleState.PLAYERTURN;
         setupGame();
@@ -23,13 +25,23 @@ public class GameManager : MonoBehaviour
     }
 
     public void PlayerStartTurn(){
-        // for(int i = 0; i <5; i++){
-        //     PlayerHand.DrawCard();
-        // }
+        for(int i = 0; i <4; i++){
+            PlayerHand.DrawCard();
+        }
+        foreach(GameObject character in currentCharacter){
+            character.GetComponent<Character>().RefillMana();
+            character.GetComponent<Character>().ResetShield();
+        }
     }
     
     public void PlayerEndTurn(){
         if (state == BattleState.PLAYERTURN){
+            ThisCard[] CardinHand;
+            CardinHand = PlayerHand.gameObject.GetComponentsInChildren<ThisCard>();
+            foreach(ThisCard Carded in CardinHand){
+                Debug.LogWarning(Carded.name);
+                Carded.Discard();
+            }
             print("Turn End");
             state = BattleState.ENEMYTURN;
             EnemyStartTurn();
@@ -59,17 +71,15 @@ public class GameManager : MonoBehaviour
 
     public void setupGame(){
         //Fix spawn character in same spot
-        Instantiate(playerPrefab[0], fieldPos.transform.GetChild(Random.Range(0, 9)).gameObject.transform);
+        currentCharacter.Add(Instantiate(playerPrefab[0], fieldPos.transform.GetChild(Random.Range(0, 9)).gameObject.transform));
         for (int i = 1; i < 3; i++){
             SpawnEnemy();
         }
+        MyDeck.addCardtoPlayerStartDeck();
         print("Finish setup");
     }
 
     public void SpawnEnemy(){
         Instantiate(enemyPrefab[0], enemyPos[Random.Range(0, 3)].transform.gameObject.transform);
-    }
-    public void playerTurn(){
-        
     }
 }

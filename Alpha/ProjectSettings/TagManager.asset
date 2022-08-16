@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - CurrentMana
   - HoldCard
+  - Graveyard
   layers:
   - Default
   - TransparentFX

@@ -27,11 +27,13 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public Image playZone;
     public Transform holdCard;
     public Transform parentToReturnTo = null;
+    public Transform basehand = null;
     public bool isPlay = false;
     public List<Enemy> EnemyTarget = new List<Enemy>();
     public List<Character> CharacterTarget = new List<Character>();
     private EffectExecute effect;
     public Character characterPlayedCard;
+    public Graveyard MyGraveyard;
 
     public bool isPlaySuccessful = false;
 
@@ -44,6 +46,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         Debug.Log(this.name + " ConstructorStart");
         playZone = GameObject.FindGameObjectWithTag("playArea").GetComponent<Image>();
         holdCard = GameObject.FindGameObjectWithTag("HoldCard").GetComponent<Transform>();
+        MyGraveyard = GameObject.FindGameObjectWithTag("Graveyard").GetComponent<Graveyard>();
         Text[] allText = gameObject.GetComponentsInChildren<Text>();
         Image[] allImage = gameObject.GetComponentsInChildren<Image>();
         for (int i = 0; i < allText.Length; i++){
@@ -69,7 +72,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
                 rarityColor = allImage[i];
             }
         }
-
+        basehand = this.transform.parent;
         IsDraw();
         
     }
@@ -98,8 +101,9 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     }
 
     public void ApplyEffect(){
-        Debug.Log("Apply effect" + this.name);
+        Debug.Log("Apply effect " + this.name);
         if (ExecuteEffect(EnemyTarget, CharacterTarget)){
+            MyGraveyard.CardToGraveyard(this.name);
             Destroy(this.gameObject);
             characterPlayedCard.PlayCard(cost);
         }
@@ -109,6 +113,11 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         //         characterPlayedCard.PlayCard(cost);
         //     }
         // }
+    }
+
+    public void Discard(){
+        MyGraveyard.CardToGraveyard(this.name);
+        Destroy(this.gameObject);
     }
 
     public virtual bool ExecuteEffect(List<Enemy> EnemyTarget = null, List<Character> CharacterTarget = null){
@@ -138,8 +147,6 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     private void Unsubscribe(){
         Enemy.isTarget -= SetEnemyTarget;
         Character.isTarget -= SetCharacterTarget;
-
-        Debug.Log("Unsubscribe");
     }
 
     private void SetEnemyTarget(Enemy targetSelect){
@@ -179,7 +186,7 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
         if (cost > characterPlayedCard.currentMP){
             canPlay = false;
-            Debug.LogWarning("Not Enough Mana");
+            
         }
         else{
             canPlay = true;
@@ -191,11 +198,11 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
         }
 
         else if (isPlay == false || !canPlay){
-            this.transform.SetParent(parentToReturnTo);
+            this.transform.SetParent(basehand);
             Unsubscribe();
             EnemyTarget.Clear();
             CharacterTarget.Clear();
-            Debug.Log("Cancel Play");
+            Debug.LogWarning("Not Enough Mana");
         }
     }
 

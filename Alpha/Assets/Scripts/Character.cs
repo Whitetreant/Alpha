@@ -46,13 +46,21 @@ public class Character : MonoBehaviour, IPointerDownHandler
          currentShield -= amount;
       }
       RefreshStatus();
-      Debug.LogWarning("Player take damage");
    }
 
    public void GetShield(int amount){
       currentShield += amount;
       RefreshStatus();
-      Debug.Log("Get Shield");
+   }
+
+   public void RefillMana(){
+      currentMP = maxMP;
+      RefreshStatus();
+   }
+
+   public void ResetShield(){
+      currentShield = 0;
+      RefreshStatus();
    }
 
    public void PlayCard(int amount){

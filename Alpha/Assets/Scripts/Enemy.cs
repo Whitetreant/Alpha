@@ -43,7 +43,14 @@ public class Enemy : MonoBehaviour, IPointerDownHandler
     }
     public void TakeDamage(int amount){
         currentHP -= amount;
-        RefreshStatus();
+        if (currentHP < 0){
+            Destroy(this.gameObject);
+        }
+        else{
+            RefreshStatus();
+        }
+        
+        
     }
 
     public void RefreshStatus(){
