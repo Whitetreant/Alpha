@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 771df3f109d22c544ab9f1a18bb75f2d, type: 3}
-  m_Name: Fury
+  m_Name: Block
   m_EditorClassIdentifier: 
-  cardID: 2
-  name: Fury
-  cost: 3
-  role: Barbarian
-  category: A
-  description: Gain power.
-  rarity: Rare
+  cardID: 4
+  name: Block
+  cost: 1
+  role: Guardian
+  category: S
+  description: Gain 3 shield.
+  rarity: Common

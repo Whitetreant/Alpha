@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 771df3f109d22c544ab9f1a18bb75f2d, type: 3}
-  m_Name: Fury
+  m_Script: {fileID: 11500000, guid: 8c52a551d7f80ca4aae8a11ee7cde204, type: 3}
+  m_Name: Guardian
   m_EditorClassIdentifier: 
-  cardID: 2
-  name: Fury
-  cost: 3
-  role: Barbarian
-  category: A
-  description: Gain power.
-  rarity: Rare
+  characterName: Guardian
+  characterMaxHP: 45
+  characterMaxMP: 3
+  characterClass: Guardian
+  characterEffectDescription: Gain shield, Taunt

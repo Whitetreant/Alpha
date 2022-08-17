@@ -43,7 +43,6 @@ public class ThisCard : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     private void Constructor(string name){
         cardName = name;
         rectTransform = GetComponent<RectTransform>();
-        Debug.Log(this.name + " ConstructorStart");
         playZone = GameObject.FindGameObjectWithTag("playArea").GetComponent<Image>();
         holdCard = GameObject.FindGameObjectWithTag("HoldCard").GetComponent<Transform>();
         MyGraveyard = GameObject.FindGameObjectWithTag("Graveyard").GetComponent<Graveyard>();

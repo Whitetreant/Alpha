@@ -19,22 +19,27 @@ public class Character : MonoBehaviour, IPointerDownHandler
    public Text showCurrentHP;
    public Text showCurrentShield;
    public Text showCurrentMP;
+   public Image currentCharacter;
 
    private void Awake(){
-      Initialize();
-      RefreshStatus();
+      
+      
       // showCurrentMP = GameObject.FindGameObjectWithTag("CurrentMana").GetComponent<Text>();
       
       
    }
-   public void Initialize(int amountShield=0){
+   public void Initialize(string name, int amountShield=0){
+      thisCharacter = Resources.Load<CharacterScriptable>("CharacterContainer/" + name);
       activePlayer = true;
+      Debug.Log(name);
+      currentCharacter.sprite = Resources.Load<Sprite>(name + " prefab");
       currentMaxHP = thisCharacter.characterMaxHP;
       currentHP = thisCharacter.characterMaxHP;
       currentShield = amountShield;
       maxMP = thisCharacter.characterMaxMP;
       currentMP = thisCharacter.characterMaxMP;
       showCurrentMP = GameObject.FindGameObjectWithTag("CurrentMana").GetComponent<Text>();
+      RefreshStatus();
    }
 
    public void TakeDamage(int amount){

@@ -70,8 +70,9 @@ public class GameManager : MonoBehaviour
     }
 
     public void setupGame(){
-        //Fix spawn character in same spot
-        currentCharacter.Add(Instantiate(playerPrefab[0], fieldPos.transform.GetChild(Random.Range(0, 9)).gameObject.transform));
+        SpawnCharacter("Barbarian");
+        SpawnCharacter("Guardian");
+
         for (int i = 1; i < 3; i++){
             SpawnEnemy();
         }
@@ -81,5 +82,10 @@ public class GameManager : MonoBehaviour
 
     public void SpawnEnemy(){
         Instantiate(enemyPrefab[0], enemyPos[Random.Range(0, 3)].transform.gameObject.transform);
+    }
+
+    public void SpawnCharacter(string name){
+        currentCharacter.Add(Instantiate(playerPrefab[0], fieldPos.transform.GetChild(Random.Range(0, 9)).gameObject.transform));
+        currentCharacter[currentCharacter.Count-1].GetComponent<Character>().Initialize(name);
     }
 }

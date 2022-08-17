@@ -299,3 +299,4 @@ MonoBehaviour:
   showCurrentHP: {fileID: 4321886253124091908}
   showCurrentShield: {fileID: 1797400116417808084}
   showCurrentMP: {fileID: 0}
+  currentCharacter: {fileID: 6621953540647376033}
